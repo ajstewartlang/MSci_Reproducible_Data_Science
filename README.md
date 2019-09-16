@@ -1,7 +1,7 @@
 # MSci Reproducible Data Science
  
- <img src="https://icon-library.net/images/email-icon-for-business-card/email-icon-for-business-card-25.jpg" width="50"> _Andrew.Stewart@manchester.ac.uk_ <br>
-<img src="https://seeklogo.com/images/T/twitter-logo-C591CF37A1-seeklogo.com.png" width="50"> _@ajstewart_lang_ <br>
+Email: _Andrew.Stewart@manchester.ac.uk_ <br>
+Twitter: _@ajstewart_lang_ <br>
 
 Slides for my 2019/20 MSci Reproducible Data Science unit.  Click on the __'Clone or download'__ button in the top right to download a zipped version of this repository.
 
