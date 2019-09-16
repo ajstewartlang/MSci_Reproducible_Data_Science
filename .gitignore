@@ -34,3 +34,8 @@ vignettes/*.pdf
 # Temporary files created by R markdown
 *.utf8.md
 *.knit.md
+
+# Ignore keynote versions of the slides
+/*/slides/*.key
+
+.Rproj.user

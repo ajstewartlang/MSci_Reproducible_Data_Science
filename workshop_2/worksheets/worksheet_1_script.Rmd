@@ -1,0 +1,138 @@
+---
+title: "worksheet_1"
+author: "Andrew Stewart"
+date: "17/10/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+First we need to install the packages we need.  We're going to install the `tidyverse` packages plus a few others. The package `Hmisc` allows us to use the `rcorr()` function for calculating Pearson's r.  Remember, if you haven't previously installed these packages on your laptop you first need to type `install.packages("packagename")` in the console before you can call the `library()` function for that package.
+
+```{r, message=FALSE}
+library(tidyverse)
+library(Hmisc)
+```
+
+Import the dataset called `crime_dataset.csv` - this dataset contains population data, housing price index data and crime data for cities in the US.
+
+It is from Kaggle datasets: 
+https://www.kaggle.com/sandeep04201988/housing-price-index-using-crime-rate-data/version/1
+
+We can use the function `head()` to display the first few rows of our dataset called "crime".
+
+```{r, message=FALSE}
+crime <- read_csv("https://bit.ly/2Z5zQlY")
+head(crime)
+```
+
+First let's do some wrangling.  There is one column that combines both City and State information.
+Let's separate that information out into two new columns called "City" and "State" using the function `separate()`. Then have a look at what you now have. How has the output of `head(crime)` changed from above?
+
+```{r}
+crime <- separate(crime, 'City, State', into=c("City", "State"))
+head(crime)
+```
+
+Now let's rename the columns to change the name of the "index_nsa" column (which is column 2) to "House_price" and get rid of the space in the "Violent Crimes" heading (which is column 6).  See how the output of `head(crime)` has changed again?
+
+```{r}
+colnames(crime)[2] <- "House_price"
+colnames(crime)[6] <- "Violent_Crimes"
+head(crime)
+```
+
+We might first think that as population size increases, crime rate also increases.  Let's first build a scatter plot.
+
+```{r, warning=FALSE}
+crime %>%
+  ggplot(aes(x = Population, y = Violent_Crimes)) + 
+  geom_point() + 
+  geom_smooth(method = "lm")
+```
+
+This plot looks pretty interesting.  How about calculating Pearson's r?
+
+```{r}
+rcorr(crime$Population, crime$Violent_Crimes)
+```
+
+Look at the r and p-values - r is =.81 and p < .001. So ~64% of the variance in our Violent_Crimes variable is explained by our Population size variable.  Clearly there is a positive relationship between population size and the rate of violent crime. From the plot, we might conclude that the relationship is being overly influenced by crime in a small number of very large cities (top right of the plot above).  Let's exclude cities with populations greater than 2,000,000
+
+```{r}
+crime_filtered <- filter(crime, Population < 2000000)
+```
+
+Now let's redo the plot:
+
+```{r, warning=FALSE}
+crime_filtered %>%
+  ggplot(aes(x = Population, y = Violent_Crimes)) + 
+  geom_point() + 
+  geom_smooth(method = "lm")
+```
+
+And calculate Pearson's r.
+
+```{r}
+rcorr(crime_filtered$Population, crime_filtered$Violent_Crimes)
+```
+
+There is still a clear positive relationship (r=.69).  Let's build a linear model. The dataset contains a lot of data and each city appears a number of times (once each year). For our linear model, our observations need to be independent of each other so let's just focus on the year 2015. That way each city will just appear once.
+
+First we apply our filter.
+
+```{r}
+crime_filtered <- filter(crime_filtered, Year == 2015)
+```
+
+Then we build a plot. I'm using the layer `geom_text()` to plot the City names and set the check_overlap paramter to `TRUE` to ensure the labels don't overlap.
+
+```{r, warning=FALSE}
+crime_filtered %>%
+  ggplot(aes(x = Population, y = Violent_Crimes, label = City)) + 
+  geom_point() + 
+  geom_text(nudge_y = 500, check_overlap = TRUE) + 
+  geom_smooth(method = "lm") + 
+  xlim(0,1800000)
+```
+
+This shows a clear positive linear relationship so let's work out Pearson's r.
+
+```{r}
+rcorr(crime_filtered$Population, crime_filtered$Violent_Crimes)
+```
+
+Imagine we are a city planner, and we want to know by how much we think violent crimes might increase as a function of population size. In other words, we want to work out how the violent crime rate is predicted by population size.
+
+We're going to build two linear models - one `model1` where we're using the mean of our outcome variable as the predictor, and a second `model2` where we are using Population size to predict the Violent Crimes outcome.
+
+```{r}
+model1 <- lm(Violent_Crimes ~ 1, data = crime_filtered)
+model2 <- lm(Violent_Crimes ~ Population, data = crime_filtered)
+```
+
+Let's use the `anova()` function to see if our model with Population as the predictor is better than the one using just the mean.
+
+```{r}
+anova(model1, model2)
+```
+
+It is - the models differ and you'll see the residual sum of squares (or the error) is less in the second model (which has Population as the predictor). This means the deviation between our observed data and the regression line model `model2` is significantly less than the deviation between our observed data and the mean as a model of our data `model1`. So let's get the parameter estimates of `model2`.
+
+```{r}
+summary(model2)
+```
+
+The intercept corresponds to where our regression line intercepts the y-axis, and the Population parameter corresponds to the slope of our line. We see that for every increase in population by 1 there is an extra 0.006963 increase in violent crime. 
+
+For a city with a population of about a million, there will be about 7907 Violent Crimes. We calculate this by multiplying the estimate of our predictor (0.006963) by 1,000,000 and
+then adding the intercept (944.3).  This gives us 7907.3 crimes - which tallys with what you
+see in our regression line above. We may have a few outliers.
+
+You now have three tasks:<br>
+1. Check whether the same relationship holds for population size and robberies in 2015.<br>
+2. Are house prices predicted by the number of violent crimes in 2015?<br>
+3. Are house prices predicted by population size in 2015? 

@@ -1,0 +1,178 @@
+---
+title: "worksheet_2"
+author: "Andrew Stewart"
+date: "24/10/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#1. Multiple Regression (Standard Method)
+
+In standard multiple regression all the independent variables (IVs) are entered into the equation and evaluated for their contribution at the same time. Let’s work through a specific example.
+
+An educational psychologist conducted a study that investigated the psycholinguistic variables that contribute to spelling performance in primary school children aged between 7- and 9-years. The researcher presented children with 48 words that varied systematically according to certain features such as age of acquisition, word frequency, word length, and imageability. The psychologist wants to check whether performance on the test accurately reflected children’s spelling ability as estimated by a standardised spelling test. That is, the psychologist wants to check whether her test was appropriate.
+
+Children’s chronological age (in months) (age), their reading age (RA), their standardised reading age (std_RA), and their standardised spelling score (std_SPELL) were chosen as predictor variables. The criterion variable (Y) was the percentage correct spelling (corr_spell) score attained by each child using the list of 48 words. 
+
+First we need to load the packages we need - the require function assumes they are already on your machine.  If they are not, then you need to install.packages ("packagename") first:
+
+```{r, message=FALSE}
+library(tidyverse) # Load the tidyverse packages
+library(Hmisc) # Needed for correlation
+library(MASS) # Needed for maths functions
+library(car) # Needed for VIF calculation
+library(olsrr) # Needed for stepwise via p 
+```
+
+You now need to read in the data file - if you can't remember the path of where it is save, click on the 'Import Dataset' icon in the top right pane of R Studio.  Make sure your data is assigned to the variable MRes_tut2 (which it should be automatically).
+
+```{r, echo=FALSE, message=FALSE}
+MRes_tut2 <- read_csv("../R_scripts/data_files/MRes_tut2.csv")
+```
+
+Before we start, let's look at the relationships between our IVs (predictors) and our DV (outcome).  We can plot graphs depicting the correlations.  We'll plot test performance against each of our four predictors in turn:
+
+```{r}
+ggplot(MRes_tut2, aes(x = age, y = corr_spell)) + 
+  geom_point() + 
+  geom_smooth(method = "lm")
+
+ggplot(MRes_tut2, aes(x = RA, y = corr_spell)) + 
+  geom_point() + 
+  geom_smooth(method = "lm")
+
+ggplot(MRes_tut2, aes(x = std_RA, y = corr_spell)) + 
+  geom_point() + 
+  geom_smooth(method = "lm")
+
+ggplot(MRes_tut2, aes(x = std_SPELL, y = corr_spell)) + 
+  geom_point() + 
+  geom_smooth(method = "lm")
+```
+
+Note the fact that chronological age does not seem to correlate with our outcome variable - we'll return to this later...
+
+We are going to do hierarchical regression first - we'll build one model (which we'll call `model0`) that is the mean of our outcome variable, and another model (`model1`) which contains all our predictors:
+
+```{r}
+model0 <- lm(corr_spell ~ 1, data = MRes_tut2)
+model1 <- lm(corr_spell ~ age + RA + std_RA + std_SPELL, data = MRes_tut2)
+```
+
+Let's compare them to each other:
+
+```{r}
+anova(model0, model1)
+```
+
+OK, so they differ - now let's plot information about model fit - remember, we are particularly interested in Cook's distance values for our case...
+
+```{r}
+plot(model1)
+```
+
+The errors looks fairly equally distributed along our fitted values (homoscedasticity) - although a little worse for high fitted values - and from the Q-Q plot we can tell they look fairly normal (they should follow the diagonal).  How about influential cases?  So, Case 10 looks a bit dodgy - it has a high Cook's Distance value - which suggests it is having a disproportionate effect on our model.  Let's exclude it using the `filter()` function - the symbol `!=` means 'does not equal' so we are selecting values other than Case 10.  
+
+```{r}
+MRes_tut2 <- filter(MRes_tut2, case != "10")
+```
+
+We now create another model (`model2`) which doesn't include Case 10.
+
+```{r}
+model2 <- lm(corr_spell ~ age + RA + std_RA + std_SPELL, data = MRes_tut2)
+```
+
+Now, let's check for multicollinearity measured by VIF:
+
+```{r}
+vif(model2)
+```
+
+It looks like RA and std_RA are problematic.  We can look at the correlation between them using the `rcorr()` function:
+
+```{r}
+rcorr(MRes_tut2$RA, MRes_tut2$std_RA)
+```
+
+The correlation is pretty high (0.88), so let's exclude the predictor with the highest VIF value (which is RA) and build a new model:
+
+```{r}
+model3 <- lm(corr_spell ~ age + std_RA + std_SPELL, data = MRes_tut2)
+vif(model3)
+```
+
+These values look ok now. Let's generate the coefficients as this looks like a sensible model.
+
+```{r}
+summary(model3)
+model0 <- lm(corr_spell ~ 1, data = MRes_tut2)
+anova(model3, model0)
+```
+
+We'd write our equation as something like:
+
+`Spelled correct = -209.44 + 1.10(age) + 0.38(std_RA) + 1.21(std_SPELL) + residual`
+
+#2. Statistical regression
+
+We can also do stepwise regression - forwards is when you start with the null model and predictors are added until they don't explain any more variance, backwards is when you start with the full model and remove predictors until removal starts affecting your model's predictive ability. Let's keep case 10 dropped and also drop the high VIF predictor (RA). This is handy for models with lots of predictors where the order in sequential regression is not obvious. 
+
+```{r}
+model0 <- lm(corr_spell ~ 1, data = MRes_tut2)
+model1 <- lm(corr_spell ~ age + std_RA + std_SPELL, data = MRes_tut2)
+```
+
+Let's do stepwise forwards:
+
+```{r}
+steplimitsf <- step(model0, scope = list (lower = model0, upper = model1), direction = "forward")
+summary(steplimitsf)
+```
+
+Stepwise backwards:
+
+```{r}
+steplimitsb <- step(model1, direction = "back")
+summary(steplimitsb)
+```
+
+And stepwise using both forwards and backwards procedures:
+
+```{r}
+steplimitsboth <- step(model0, scope = list (upper = model1), direction = "both")
+summary(steplimitsboth)
+```
+
+You'll see that the same final model is arrived it in each case. We have three significant predictors.
+
+We can also use the `ols_step_forward_p()` function from the package `olsrr` - this works by finding the best model by entering the predictors based on their p values.  There are other methods within the `olsrr` package.  To see them, type `olsrr::` into the console window.
+
+```{r}
+pmodel <- ols_step_forward_p(model1)
+summary(pmodel)
+```
+
+In this case, the model with the lowest AIC value is also the one arrived at statisically via the sequential procedure based on p-values - but this may not always be the case.
+
+If you look back to the initial plots we did, you might have noticed that chronological age did not seem to correlate with our outcome measure.  Perhaps chronological age is acting as a suppressor - let's build a model without it.
+
+```{r}
+modelx <- lm(corr_spell ~ std_RA + std_SPELL, data = MRes_tut2)
+
+AIC(modelx)
+AIC(model1)
+```
+
+On an AIC basis the model with chronological age is a better model - if chronological age is acting as a supressor, then we might expect the effect of standardised reading age to be reduced when chronological age is left out.  Looking at the parameters for the two models, we see this is the case. The aspects of reading age that are not captured by chronological age are therefore important for our outcome.
+
+```{r}
+summary(modelx)
+summary(model1)
+```
+
+We would also expect chronological age and standardised reading age to be correlated - are they?
+
