@@ -18,26 +18,19 @@ And RStudio from here:
 
 https://www.rstudio.com/products/rstudio/download/#download
 
-<br>
-
 ## Online R Resources
 
 Below are some helpful R resources - it would be useful to look at the first one before the workshop.
-<br><br>
 
 ##### Online introductory guide to R, RStudio, and R Markdown.
 This is a very clear and focused introduction to R, RStudio, and R Markdown.  You probably want to read the first four chapters sooner rather than later...
 
 http://rbasics.netlify.com
 
-<br>
-
 ##### R for Data Science online book - Garrett Grolemund and Hadley Wickham
 This is the online interactive version of the book of the same name.  It focuses more on the data science side of things than on statistics per se, and is very useful (especially in terms of data wrangling).
 
 http://r4ds.had.co.nz
-
-<br>
 
 ## The Course Material
 
