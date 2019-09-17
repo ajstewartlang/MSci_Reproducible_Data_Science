@@ -10,7 +10,7 @@ The morning session is 1100-1300 and the afternoon session is 1400-1600 in Stopf
 
 ## Before the First Workshop - Installing R and RStudio
 
-You will probably want to bring a laptop for this course - although we will be in a PC cluster if you don't have a laptop.  Beforehand, you should install R (the language) and RStudio (the interface that helps us interact with R) - each is available for OSX, Windows, and various flavours of Unix. You can install R from here:
+You will probably want to bring your laptop for this course (although we will be in a PC cluster in case you don't have a laptop). Beforehand, on your laptop you should install R (the language) and RStudio (the interface that helps us interact with R) - each is available for OSX, Windows, and various flavours of Unix. You can install R from here:
 
 https://www.stats.bris.ac.uk/R/
 
