@@ -28,7 +28,7 @@ This is a very clear and focused introduction to R, RStudio, and R Markdown.  Yo
 http://rbasics.netlify.com
 
 ##### R for Data Science online book - Garrett Grolemund and Hadley Wickham
-This is the online interactive version of the book of the same name.  It focuses more on the data science side of things than on statistics per se, and is very useful (especially in terms of data wrangling).
+This is the online interactive version of the book of the same name.  It's a great book to introduce you to data science, reproducibility, and R.
 
 http://r4ds.had.co.nz
 
