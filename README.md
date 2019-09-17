@@ -43,5 +43,3 @@ Workshop 3 - The Linear Model (ANOVA) <br>
 Workshop 4 - Mixed Models <br>
 Workshop 5 - Data Simulation and Advanced Data Visualisation <br>
 Workshop 6 - Reproducible Computational Environments and Presentations <br>
-
-Happy coding!
