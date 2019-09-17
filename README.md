@@ -4,7 +4,7 @@ Twitter: _@ajstewart_lang_ <br>
 
 Slides for my 2019/20 MSci Reproducible Data Science unit.  Click on the __'Clone or download'__ button in the top right to download a zipped version of this repository.
 
-Classes start __Friday November 8th__ and run until December 13th.  They are every Friday from 1100-1300 and 1400-1600 in Stopford PC Cluster 3.
+Classes start __Friday November 8th__ and run until __Friday December 13th__. the morning sessions is 1100-1300 and the afternoon session is 1400-1600 in Stopford PC Cluster 3.
 
 Each folder contains the slides in .pdf format, R scripts, all the data, and the worksheets associated with each of the 6 workshops.
 
