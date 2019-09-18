@@ -101,18 +101,20 @@ condition <- c(rep("large", 10), rep("small", 10))
 
 subject <- c(1, 10, 2, 3, 4, 5, 6, 7, 8, 9, 1, 10, 2, 3, 4, 5, 6, 7, 8, 9)
 
-data <- arrange(as.tibble(cbind(subject, condition, rt)), -desc(subject))
+my_data <- arrange(as.tibble(cbind(subject, condition, rt)), -desc(subject))
 
-data$rt <- as.integer(data$rt)
-data$condition <- as.factor(data$condition)
-data$subject <- as.factor(data$subject)
+my_data$rt <- as.integer(my_data$rt)
+my_data$condition <- as.factor(my_data$condition)
+my_data$subject <- as.factor(my_data$subject)
 
-data %>% group_by(condition) %>% summarise(mean(as.integer(rt)))
+my_data %>% group_by(condition) %>% summarise(mean(as.integer(rt)))
 
-ggplot(data, aes (x = condition, y = rt, group = subject, label = subject)) + 
+ggplot(my_data, aes (x = condition, y = rt, group = subject, label = subject)) + 
   geom_line(alpha = .5) +
   geom_text(check_overlap = T) +
-  labs(x = "Condition", y = "RT in ms.", title = "Individual model slopes labelled per subject")
+  labs(title = "Individual model slopes labelled per subject",
+       x = "Condition", 
+       y = "RT in ms.")
 
 # Now by items ####
 intercepts <- coef(mixed_model)$item[1]
@@ -126,18 +128,20 @@ condition <- c(rep("large", 5), rep("small", 5))
 
 item <- c(1:5, 1:5)
 
-data <- arrange(as.tibble(cbind(item, condition, rt)), -desc(item))
+my_data <- arrange(as.tibble(cbind(item, condition, rt)), -desc(item))
 
-data$rt <- as.integer(data$rt)
-data$condition <- as.factor(data$condition)
-data$item <- as.factor(data$item)
+my_data$rt <- as.integer(my_data$rt)
+my_data$condition <- as.factor(my_data$condition)
+my_data$item <- as.factor(my_data$item)
 
-data %>% group_by(condition) %>% summarise(mean(as.integer(rt)))
+my_data %>% group_by(condition) %>% summarise(mean(as.integer(rt)))
 
-ggplot(data, aes (x = condition, y = rt, group = item, label = item)) + 
+ggplot(my_data, aes (x = condition, y = rt, group = item, label = item)) + 
   geom_line(alpha = .5) +
   geom_text(check_overlap = T) +
-  labs(x = "Condition", y = "RT in ms.", title = "Individual model slopes labelled per item")
+  labs(title = "Individual model slopes labelled per item",
+       x = "Condition", 
+       y = "RT in ms.")
 
 # Comparing model subject intercept and slopes to the actual data
 intercepts <- coef(mixed_model)$subject[1]
@@ -160,7 +164,7 @@ together <- full_join(model_estimates, agg_data, by = "subject")
 together %>% 
   ggplot(aes(x = estimated_large, y = large)) + 
   geom_point() +
-  geom_smooth(method = "lm") +
+  #geom_smooth(method = "lm") +
   labs(x = "Predicted by the model", y = "Actual values", 
        title = "Actual data and data predicted by the model for participants")
 
@@ -173,7 +177,7 @@ abline(h = 0, lty = 2)
 lines(smooth.spline(fitted(mixed_model), residuals(mixed_model)))
 
 # Checking out the residuals
-hist(residuals(mixed_model))
+qqnorm(residuals(mixed_model))
 qqline(residuals(mixed_model))
 
 # Illustration of partial pooling ####
