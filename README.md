@@ -8,6 +8,18 @@ Classes start __Friday November 8th__ and run until __Friday December 13th__.
 
 The morning session is 1100-1300 and the afternoon session is 1400-1600 in Stopford PC Cluster 3.
 
+## The Course Material
+
+Each folder contains the slides in .pdf format, R scripts, all the data, and the worksheets associated with each of the 6 workshops.
+
+## The Workshops
+Workshop 1 - Reproducibility and R <br>
+Workshop 2 - The General Linear Model (Regression) <br>
+Workshop 3 - The General Linear Model (ANOVA) <br>
+Workshop 4 - Mixed Models <br>
+Workshop 5 - Data Simulation and Advanced Data Visualisation <br>
+Workshop 6 - Reproducible Computational Environments and Presentations <br>
+
 ## Before the First Workshop - Installing R and RStudio
 
 You will probably want to bring your laptop for this course (although we will be in a PC cluster in case you don't have a laptop). Beforehand, on your laptop you should install R (the language) and RStudio (the interface that helps us interact with R) - each is available for OSX, Windows, and various flavours of Unix. You can install R from here:
@@ -32,15 +44,5 @@ This is the online interactive version of the book of the same name.  It's a gre
 
 http://r4ds.had.co.nz
 
-## The Course Material
 
-Each folder contains the slides in .pdf format, R scripts, all the data, and the worksheets associated with each of the 6 workshops.
-
-## The Workshops
-Workshop 1 - Reproducibility and R <br>
-Workshop 2 - The General Linear Model (Regression) <br>
-Workshop 3 - The General Linear Model (ANOVA) <br>
-Workshop 4 - Mixed Models <br>
-Workshop 5 - Data Simulation and Advanced Data Visualisation <br>
-Workshop 6 - Reproducible Computational Environments and Presentations <br>
 
