@@ -1,0 +1,272 @@
+---
+title: "Linear Mixed Models Workshop"
+author: "Andrew Stewart"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(Hmisc)
+library(lme4)
+library(lmerTest)
+library(emmeans)
+library(visdat)
+```
+
+## Linear Mixed Models
+Today we are now going to turn to mixed models.  
+
+#Q1
+Within R, import the dataset "data1.csv".  These data are from a reaction time experiment.  Fifty participants had to respond to a word on the screen.  Their task was to press a button on a button box only when they recognized the word (our DV is measures in milliseconds).  The words were either Rare or Common.  The design is repeated measures.  We might expect Common words to be recognized more quickly than Common words.  Run the appropriate LMM to determine whether this is indeed correct.
+
+```{r, message=FALSE}
+data <- read_csv("data1.csv")
+```
+
+First we need to make sure that our Subject, Item, and Condition columns are all factors - the first two we will use as our random effects, the third as our fixed effect:
+
+```{r}
+data$Subject <- as.factor(data$Subject)
+data$Item <- as.factor(data$Item)
+data$Condition <- as.factor(data$Condition)
+```
+
+Let's build a plot:
+
+```{r, warning=FALSE}
+data %>%
+  ggplot(aes(x = Condition, y = RT, colour = Condition)) +
+  geom_violin() +
+  geom_jitter(alpha = .2, width = .2) +
+  guides(colour = FALSE) +
+  geom_boxplot(width = .2, colour = "black", alpha = 0) +
+  coord_flip()
+```
+
+Generate some descriptives:
+
+```{r}
+data %>% group_by(Condition) %>% 
+  filter(!is.na(RT)) %>% 
+  summarise(mean = mean(RT), sd = sd(RT))
+```
+
+Let's run a basic mixed model first:
+
+```{r}
+model1 <- lmer(RT ~ Condition + (1 + Condition | Subject) + (1 + Condition | Item), data = data, REML = TRUE )
+summary(model1)
+```
+
+We can see we have an effect of condition - the Intercept corresponds to our 'Common' condition and our ConditionRare estimate corresponds to the difference between our 'Common' and 'Rare' conditions.  In other words, our 'Rare' condition words are about 200 msec. slower to respond to. That fits with the descriptives we calculated earlier.  The estimates differ slighly from our descriptives as we have a missing data point which we can see by using the filter() function to display cases where we have missing RT data (indicated by NA).
+
+```{r}
+filter(data, is.na(RT))
+```
+
+How do the residuals look?
+
+```{r}
+qqnorm(residuals(model1))
+```
+
+OK, so these don't look too normal.  We now have a couple of options - we could log transform our DV... 
+
+```{r}
+model2 <- lmer(log(RT) ~ Condition + (1 | Subject) + (1 | Item), data = data, REML = TRUE)
+summary(model2)
+```
+
+The same finding holds - with the 'Rare' condition taking longer to read.  Interpreting the estimates is harder though as they are log transformed... Do the residuals now look normally distributed?
+
+```{r}
+qqnorm(residuals(model2))
+```
+
+This is looking better than modelling over the untransformed data. Another option would be to build a generalised linear mixed model assuming sampling from the Gamma distribution.
+
+#Q2
+Within R, import the dataset "data2.csv".  These data are from an experiment where we measured how long people spent looking at images that appeared on screen.  The images depicted either positive, neutral, or negative scenes.  This is our one factor with three levels.  The design was repeated measures.  Perform the appropriate LMM analysis and determine whether people spent a different amount of time looking at the positive relative to the negative images, and the neutral relative to the negative images. 
+
+```{r include=FALSE}
+data <- read_csv("data2.csv")
+```
+
+First we need to set our appropriate factors.
+
+```{r}
+data$Subject <- as.factor(data$Subject)
+data$Item <- as.factor(data$Item)
+data$Image <- as.factor(data$Image)
+```
+
+Let's visual our data:
+
+```{r, warnings=FALSE}
+vis_miss(data)
+data %>%
+  ggplot(aes (x = Image, y = RT, colour = Image)) +
+  geom_violin() +
+  geom_jitter(alpha = .2, width = .2) +
+  guides(colour = FALSE) +
+  geom_boxplot(width = .2, colour = "black", alpha = 0) +
+  coord_flip()
+```
+
+We have some missing data so need to use na.rm = TRUE to ignore those points.
+
+```{r}
+data %>% 
+  group_by(Image) %>% 
+  summarise(mean = mean(RT, na.rm = TRUE), sd = sd(RT, na.rm = TRUE))
+```
+
+Let's build our model.
+
+```{r}
+model <- lmer(RT ~ Image + (1 | Subject) + (1 | Item), data = data, REML = TRUE)
+summary(model)
+```
+
+How do the residuals look?
+
+```{r}
+qqnorm(residuals(model))
+```
+
+OK, maybe we should log transform the data:
+
+```{r}
+model <- lmer(log(RT) ~ Image + (1 | Subject) + (1 | Item), data = data, REML = TRUE)
+summary(model)
+qqnorm(residuals(model))
+```
+
+OK, with log transformed data our residuals look a lot better.  We find that the Neutral and Positive conditions differ from the Negative. 
+
+#Q3
+
+Now we're going to import the dataset "data3.csv".  These data are from a repeated measures experiment where participants had to respond to a target word (measured by our DV which is labelled "Time").  The target word always followed a prime word.  Prime and Target are our two factors – each with two levels – Positive vs. Negative.  We are interested in whether there is a priming effect (i.e., Positive target words responded to more quickly after Positive than after Negative Primes, and Negative target words responded to more quickly after Negative than after Positive Primes).  We need to build the appropriate LMM to determine whether this is indeed correct.
+
+```{r, message=FALSE}
+data <- read_csv("data3.csv")
+```
+
+First we need to create our factors:
+
+```{r}
+data$Subject <- as.factor(data$Subject)
+data$Item <- as.factor(data$Item)
+data$Prime <- as.factor(data$Prime)
+data$Target <- as.factor(data$Target)
+```
+
+As it is a factorial experiment, we need to set up our contrast weightings for our two factors. This allows for easier intepretation of the paramester estimates - the intercept will correspond to the Grand Mean (i.e., the mean of our conditions).
+
+```{r}
+contrasts(data$Prime) <- matrix(c(.5, -.5))
+contrasts(data$Target) <- matrix(c(.5, -.5))
+```
+
+We can now check the structure of our data:
+
+```{r}
+head(data)
+```
+
+Let's visualise our data:
+
+```{r, warning=FALSE}
+data %>%
+  ggplot(aes(x = Prime:Target, y = Time, colour = Prime:Target)) +
+  geom_violin() +
+  geom_jitter(alpha = .2, width = .2) +
+  guides(colour = FALSE) +
+  geom_boxplot(width = .2, colour = "black", alpha = 0) +
+  coord_flip()         
+```
+
+Now we are going to generate some descriptives, filtering out cases where we have missing data in our dependent variable (labelled "Time").
+
+```{r}
+data %>%
+  filter(!is.na(Time)) %>%
+  group_by(Prime, Target) %>%
+  summarise(mean = mean(Time), sd = sd(Time))
+```
+
+```{r}
+data %>% filter(is.na(Time)) 
+```
+
+Note we have a little missing data (121 rows) - not a big deal, but something that you could report.
+
+We could calculate and plot the amount of missing data per participant:
+
+```{r, warnings=FALSE}
+data %>% 
+  group_by(Subject) %>% 
+  summarise(missing_count = sum(is.na(Time))) %>%
+  ggplot(aes(x = Subject, y = missing_count)) +
+  geom_col()
+```
+
+```{r}
+model <- lmer(Time ~ Prime * Target + (1 + Prime * Target | Subject) + (1 + Prime * Target | Item), data = data, REML = TRUE)
+summary(model)
+```
+
+This suggests our model is over-parameterised - the "singular fit" message tells us we have combinations of our effects where some dimensions of the variance-covariance matrix in our model are effectively zero. In other words, we are trying to estimate more parameters than our data will allow. In practice you might want to simplify your random effects structure until you find a model that isn't over parameterised. For the time being, let's stick with this model. 
+
+Our interaction is significant - we now need to run pairwise comparisons to figure out what condition(s) differs from what other condition(s). We need to use the emmeans() function from the emmeans package - let's do the correction manually as only a couple of pairwise comparisons make theoretical sense.  They are Positive/Positive vs Negative/Positive, and Negative/Negative vs Positive/Negative.  These are the only pairs where we're comparing the same target to the same target under the two different levels of our prime.  So, we need to multiply by 2 the calculated p-values for these comparisons to correct for familywise error.
+
+```{r}
+emmeans(model, pairwise ~ Prime * Target, adjust = "none")
+```
+
+What do the residuals look like?
+
+```{r}
+qqnorm(residuals(model))
+```
+
+The above residuals don't look brilliant.  What about log transform? The most complex random effects model we can build is this one (although it looks over-parameterised): 
+
+```{r}
+model <- lmer(log(Time) ~ Prime * Target + (1 + Prime * Target | Subject) + (1 + Prime * Target | Item), data = data, REML = TRUE)
+summary(model)
+```
+
+```{r}
+qqnorm(residuals(model))
+```
+
+Those residuals look pretty nice - clearly normally distributed so we should adopt model7 as our model (but be minded by the fact we may be trying to estimate too many parameters). Let's run the pairwise comparisons using emmeans() - we need to remember to correct for the familywise error manually.
+
+To aid interpretation of our results, we want our comparisons to be reported on the response scale rather thanon the log scale - so we need to specify this when we call the emmeans() function by setting the parameter type to equal "response".
+
+```{r}
+emmeans(model, pairwise ~ Prime * Target, adjust = "none", type = "response")
+```
+
+Again we see the pairwise comparisons don't survive familywise error correction.  In this case we might start to wonder about our experimental power.  As a rule of thumb, you need around 1600 observations per condition to detect the kinds of effect sizes we're looking for:
+
+![](image.png) 
+<br>
+<br>
+Brysbaert, M. & Stevens, M. (2018). Power Analysis and Effect Size in Mixed Effects Models: A Tutorial. _Journal of Cognition, 1_, 1–20, DOI: https://doi.org/10.5334/joc.10
+
+How many observations did we have per condition?
+
+```{r}
+data %>% group_by(Prime, Target) %>% summarise(count = n())
+```
+
+We need to run a much higher powered experiment - we need to increase the number of participants, the number of trials, or both!
+
+What about calculating the Bayes factor in support of the experimental vs. the null hypothesis?  Have a look at the slides from this morning about how to do that...
+

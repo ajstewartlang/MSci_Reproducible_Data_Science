@@ -3,7 +3,7 @@ library(afex) # ANOVA functions
 library(emmeans) # Needed for pairwise comparisons
 
 # Mixed ANOVA with one between participants factor, and two repeated
-my_data <- read_csv("my_data.csv")
+my_data <- read_csv("data_files/my_data.csv")
 
 my_data <- my_data %>% 
   mutate(Image = factor(Image)) %>%
@@ -41,7 +41,7 @@ anova(model_old)
 emmeans(model_old, pairwise ~ Word * Image, adjust = "Bonferroni")
 
 #ANCOVA
-cond <- read_csv("cond.csv")
+cond <- read_csv("data_files/cond.csv")
 
 cond <- cond %>% 
   mutate(Condition = as.factor(Condition))
