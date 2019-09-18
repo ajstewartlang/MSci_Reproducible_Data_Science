@@ -1,4 +1,4 @@
-# MSci Reproducible Data Science
+# MSci Reproducible Data Science (BIOL33031)
  Email: _Andrew.Stewart@manchester.ac.uk_ <br>
 Twitter: _@ajstewart_lang_ <br>
 
