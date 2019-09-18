@@ -1,30 +1,32 @@
 ---
-title: "worksheet"
+title: "Worksheet"
 author: "Andrew Stewart"
-date: "29/11/2019"
+date: "6/12/2019"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-# Advanced R Worksheet
+# Data Simulation and Advanced Data Visualisation Worksheet
 
 Work through any of the following questions in whatever order you want – you probably won’t have time to do them all in the lab, so focus on those you think will be of most interest/use to you.
 
-Data Simulation
-1. Simulate an independent samples experiment where you have two groups of participants (15 in each group) responding on a reaction time task – assume the data distribution shape is normal and that the parameters of the RT data for Group 1 are a mean of 500 and a SD of 25, and for Group 2 the mean is 750 and the SD is 25. Plot the data using `geom_point()` for one simulation.
+##Text Analysis and Twitter Scraping (fun!)
 
-2. Write a loop to simulate 1000 samples of the above experiment.  What is the estimated effect size, and what power do we have to detect that effect?  Hint – in addition to setting a loop to simulate the data from 1000 samples, you’ll also need to work out the t-value and associated p-value for each sample.  You could either do this within the same loop you’re using the create the 1000 samples, or you could write another loop just to do the t-tests after you’ve created your 1000 samples. Have a look at both the slides and the R script this morning if you’re not sure where to start.  When you’re learning to code, much of what you’ll find useful is modifying code written by some else…
+1. Maybe you'd like to try some Twitter scraping using the `rtweet()` package - maybe search for mentions of your favourite band. You could then use the `tidytext` package to wrangle the Tweets, plot a wordcloud and run a sentiment analysis on what peolpe are saying about the band. You’ll need to have a look at this morning’s script for the code needed to scrape Twitter, and to get the text in the right format for visualising and plotting a wordcloud. Look for the the `unnest_tokens()` function in the script from this morning - it is used to split a text file into individual words (or tokens) and the `get_sentiments()` function is used to get the sentiment for each of those words. You'll want to use this to split the content Tweets from your Twitter scraping into separate words.  
 
 ##Animated Data Visualisations
-3. Using either a built in dataset (e.g., the `mpg` or `starwars` dataset) or an external one (e.g., the `NHANES` dataset which is accessible in the package called `NHANES`) build some data viz animations to communicate some interesting aspect of the data.
+2. Using either a built in dataset (e.g., the `mpg` or `starwars` dataset) or an external one (e.g., the `NHANES` dataset which is accessible in the package called `NHANES`) build some data viz animations to communicate some interesting aspect of the data.
 
-4. Install the BBC style package using:
+3. Install the BBC style package using:
 
 `devtools::install_github('bbc/bbplot')`
 
 and apply the `bbc_style()` function to the above animations.
 
-##Text Analysis
-5. Use the tidytext package to plot a wordcloud and run a sentiment analysis on some text data.  Maybe you could do some Twitter scraping using the `rtweet()` package.  You’ll need to have a look at this morning’s script for the code needed to get the text in the right format for (e.g.) plotting a wordcloud.  Have a look at the code from line 658 – the unnest_tokens() function is used to split a text file into individual words (or tokens) and get_sentiments() function (see line 520) is used to get the sentiment for each of those words.   A good starting point would simply be to map your textfile onto the variable called text and then modify my code.
+##Data Simulation
+
+4. Simulate an independent samples experiment where you have two groups of participants (15 in each group) responding on a reaction time task – assume the data distribution shape is normal and that the parameters of the RT data for Group 1 are a mean of 500 and a SD of 25, and for Group 2 the mean is 750 and the SD is 25. Plot the data using `geom_point()` for one simulation.
+
+5. Write a loop to simulate 1000 samples of the above experiment. What is the estimated effect size, and what power do we have to detect that effect? Hint – in addition to setting a loop to simulate the data from 1000 samples, you’ll also need to work out the t-value and associated p-value for each sample. You could either do this within the same loop you’re using the create the 1000 samples, or you could write another loop just to do the t-tests after you’ve created your 1000 samples. Have a look at both the slides and the R script this morning if you’re not sure where to start. When you’re learning to code, much of what you’ll find useful is modifying code written by some else…
