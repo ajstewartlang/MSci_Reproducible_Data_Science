@@ -38,8 +38,8 @@ Each folder contains the slides in .pdf format, R scripts, all the data, and the
 
 ## The Workshops
 Workshop 1 - Reproducibility and R <br>
-Workshop 2 - The Linear Model (Regression) <br>
-Workshop 3 - The Linear Model (ANOVA) <br>
+Workshop 2 - The General Linear Model (Regression) <br>
+Workshop 3 - The General Linear Model (ANOVA) <br>
 Workshop 4 - Mixed Models <br>
 Workshop 5 - Data Simulation and Advanced Data Visualisation <br>
 Workshop 6 - Reproducible Computational Environments and Presentations <br>
