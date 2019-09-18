@@ -1,0 +1,14 @@
+---
+title: "ANOVA_part_2_lab_script"
+author: "Andrew Stewart"
+date: "22/11/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Question 
+
+The datafile is called ANOVA_lab2_data1.csv. The data are from a 2 x 2 x 3 mixed design experiment where we measured people's response times to maths questions that were either Easy or Hard, and to which they had to respond either under Time Pressure or under No Time Pressure.  These are our first two factors and are repeated measures (i.e., everyone saw all 4 conditions).  Our final factor is between subjects and corresponds to whether our participants were in one of three groups.  The groups were Psychology Students, Maths Students, and Arts Students.  We want to know where a participant's perfomance on the maths questions under time pressure vs. not under time pressure is influenced by which one of these three groups they belong to. Conduct the appropriate ANOVA to answer this question.  Remember to start off with some data visualisation(s).
+

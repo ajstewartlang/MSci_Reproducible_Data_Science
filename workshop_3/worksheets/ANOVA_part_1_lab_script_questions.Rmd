@@ -1,0 +1,22 @@
+---
+title: "ANOVA_part_1_lab_script_questions"
+author: "Andrew Stewart"
+date: "22/11/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Question 1
+
+Our first datafile is called ANOVA_lab1_data1.csv. 24 participants responded to a word that was either common (i.e., high lexical frequency) or rare (i.e., low lexical frequency).  This is our IV and is coded as 'High' vs. 'Low'.  Our DV is reaction time and is coded as 'RT'. Subject number is coded as 'Subject'. We want to know whether there is a difference between conditions (and if so, where that difference lies). Visualise the data, generate descrtiptives, and run the appropriate ANOVA to determine whether our independent variable (Condition) has an influence on our dependent variable (RT).
+
+## Question 2
+
+Our second datafile is called ANOVA_lab1_data2.csv. These data are also from a rection time experiment but with a slightly more complex design.  48 participants responded to a word that differed in how frequent it was.  This factor is between participants and we have four levels coded as 'very low', 'low', 'high', and 'very high'.  Our DV is reaction time and is coded as 'RT'. Subject number is coded as 'Subject'. We want to know if there is a difference between our conditions (and if so, where that difference lies).
+
+## Question 3
+
+Our third datafile is called ANOVA_lab1_data3.csv. These data are from a 2 x 2 repeated measures reaction time experiment.  We were interested in how quickly participants could respond to images that were Large vs. Small and in Colour vs. Black & Wwhite.  We expect that Large Colour images will be responded to more quickly than Small B & W images.  We're not sure about Small Colour images and Large B & W images.  We measured the response times of 24 participants responding to an image in each of these four conditions.  We want to determine if there is a difference between our conditions (and if so, where that difference lies).

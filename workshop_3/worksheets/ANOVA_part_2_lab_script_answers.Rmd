@@ -1,0 +1,201 @@
+---
+title: "ANOVA_part_2_lab_script"
+author: "Andrew Stewart"
+date: "22/11/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+First we need to load our packages - `tidyverse`, `afex`, and `emmeans`
+
+```{r, message=FALSE}
+library(tidyverse)
+library(afex)
+library(emmeans)
+```
+
+The datafile is called ANOVA_lab2_data1.csv. We  need to load our dataset and map it onto a variable we're calling `my_data`.
+
+```{r, message=FALSE}
+my_data <- read_csv("ANOVA_lab2_data1.csv")
+```
+
+The data are from a 2 x 2 x 3 mixed design experiment where we measured people's response times to maths questions that were either Easy or Hard, and to which they had to respond either under Time Pressure or under No Time Pressure.  These are our first two factors and are repeated measures (i.e., everyone saw all 4 conditions).  Our final factor is between subjects and corresponds to whether our participants were in one of three groups.  The groups were Psychology Students, Maths Students, and Arts Students.  We want to know where a participant's perfomance on the maths questions under time pressure vs. not under time pressure is influenced by which one of these three groups they belong to. Conduct the appropriate ANOVA to answer this question. 
+
+Our datadiles looks like this:
+
+```{r}
+my_data
+```
+
+Let's set our three IV columns as factors and look at our data again - we're going to pipe the datafile `my_data` and use `mutate()` to change each of the three variables to factors.  
+
+```{r}
+my_data <- my_data %>%
+  mutate(Difficulty = factor(Difficulty)) %>%
+  mutate(Time_Pressure = factor(Time_Pressure)) %>%
+  mutate(Group = factor(Group))
+
+my_data
+```
+
+We are first going to visualise the whole dataset (ignoring the Group factor initially). We will construct a boxplot first - note we are using the function `scale_x_discrete()` here to re-label our x-axis. 
+
+```{r}
+ggplot(my_data, aes(x = Difficulty:Time_Pressure, y = RT, fill = Difficulty:Time_Pressure)) + 
+  geom_boxplot() +
+  guides(fill = FALSE) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  scale_x_discrete(labels = c("Easy\nNo Time Pressure","Easy\nTime Pressure", "Hard\nNo Time Pressure", "Hard\nTime Pressure")) + 
+  labs(title = "Boxplot of Reaction Time to Easy vs. Hard Maths Problems Under\nTime Pressure vs. No Time Pressure",
+       x = "", 
+       y = "RT (ms.)") 
+```
+
+Now we are going ot plot the condition means with 95% confidence intervals.
+
+```{r}
+ggplot(my_data, aes(x = Difficulty:Time_Pressure, y = RT, fill = Difficulty:Time_Pressure)) + 
+  stat_summary(fun.data = mean_cl_boot) + 
+  guides(fill = FALSE) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  scale_x_discrete(labels = c("Easy\nNo Time Pressure","Easy\nTime Pressure","Hard\nNo Time Pressure", "Hard\nTime Pressure")) + 
+  labs(title = "Boxplot of Reaction Time to Easy vs. Hard Maths Problems Under\nTime Pressure vs. No Time Pressure",
+       x = "", 
+       y = "RT (ms.)") 
+```
+
+These plots are potentially quite mislading. The boxplot might make use think our data overlap quite a lot from one Condition to the next, while the Means and CI plot might make us think that all conditions differ from each other (regardless of Group). But that's because the distribution of the dataset is invisible to us via these visualisations. If we add the actual data (using `geomjitter()`) we can see how misleading these kind of summary plots can be - we can colour the indiviudal data points by Group.
+
+First we will redo our boxplot.
+
+```{r}
+ggplot(my_data, aes(x = Difficulty:Time_Pressure, y = RT, fill = Difficulty:Time_Pressure)) + 
+  geom_boxplot() + 
+  geom_jitter(aes(colour = Group), width = .2, alpha = .75) +
+  guides(fill = FALSE) + scale_color_brewer(palette = "Dark2") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  scale_x_discrete(labels = c("Easy\nNo Time Pressure","Easy\nTime Pressure","Hard\nNo Time Pressure", "Hard\nTime Pressure")) + 
+  labs(title = "Boxplot of Reaction Time to Easy vs. Hard Maths Problems Under\nTime Pressure vs. No Time Pressure",
+       x = "", 
+       y = "RT (ms.)") 
+```
+
+Then we will redo our plot with means and 95% CIs.
+
+```{r}
+ggplot(my_data, aes(x = Difficulty:Time_Pressure, y = RT, fill = Difficulty:Time_Pressure)) + 
+  stat_summary(fun.data = mean_cl_boot) + 
+  geom_jitter(aes(colour = Group), width = .2, alpha = .5) +
+  guides(fill = FALSE) + 
+  scale_color_brewer(palette = "Dark2") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  scale_x_discrete(labels = c("Easy\nNo Time Pressure","Easy\nTime Pressure","Hard\nNo Time Pressure", "Hard\nTime Pressure")) + 
+  labs(title = "Boxplot of Reaction Time to Easy vs. Hard Maths Problems Under\nTime Pressure vs. No Time Pressure",
+       x = "", 
+       y = "RT (ms.)")  
+```
+
+It is interesting to note that for the Easy / No Time Pressure Condition, the mean of the datset is nowhere near any of the actual data points - the 95% CI doesn't include even one actual data point. It's better that we do separate plots for each group. We are going to use the `facet_wrap()` function to generate separate plots for each Group. 
+
+Note that for this first plot I am flipping the x- and y- axes using `coord_flip()`. This can sometimes help with the interpretation of a visualisation (especially if the x-axis factor labels are quite long).
+
+```{r}
+ggplot(my_data, aes(x = Difficulty:Time_Pressure, y = RT, fill = Difficulty:Time_Pressure)) + 
+  facet_wrap(~ Group) +
+  geom_violin() + 
+  geom_jitter(width = .1, alpha = .2) + 
+  stat_summary(fun.data = mean_cl_boot) + 
+  guides(fill = FALSE) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  scale_x_discrete(labels = c("Easy\nNo Time Pressure","Easy\nTime Pressure","Hard\nNo Time Pressure", "Hard\nTime Pressure")) + 
+  labs(title = "Boxplot of Reaction Time to Easy vs. Hard Maths Problems Under\nTime Pressure vs. No Time Pressure",
+       x = "", 
+       y = "RT (ms.)") + 
+  coord_flip() 
+```
+
+And now a boxplot - this time I'm not flipping the axes, but I am tilting the x-axis text 45 degrees to improve readibility.
+
+```{r}
+ggplot(my_data, aes(x = Difficulty:Time_Pressure, y = RT, fill = Difficulty:Time_Pressure)) + 
+  facet_wrap(~ Group) +
+  geom_boxplot() + 
+  geom_jitter(width = .1, alpha = .2) + 
+  guides(fill = FALSE) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  scale_x_discrete(labels = c("Easy\nNo Time Pressure","Easy\nTime Pressure","Hard\nNo Time Pressure", "Hard\nTime Pressure")) + 
+  labs(title = "Boxplot of Reaction Time to Easy vs. Hard Maths Problems Under\nTime Pressure vs. No Time Pressure",
+       x = "", 
+       y = "RT (ms.)") 
+```
+
+We are now going to generate some summary descriptives.
+
+```{r}
+my_data %>% 
+  group_by(Group, Difficulty, Time_Pressure) %>% 
+  summarise(mean = mean(RT), sd = sd(RT))
+```
+
+To build our ANOVA model, we need to use the `aov_4()` function from the afex package.  The expression `Difficulty * Time_Pressure * Group` corresponds to a main effect of each of these three factors plus all possible interactions between them.  We add the `Difficulty * Time_Pressure` term to our random effect definition to make it clear these are our repeated measures. We ask for the output in ANOVA format using the `anova()` function - this will gives us our effect size measure as generalised eta squared. 
+
+```{r}
+model <- aov_4(RT ~ Difficulty * Time_Pressure * Group + (1 + Difficulty * Time_Pressure | Subject), data = my_data)
+anova(model)
+```
+
+As the 3-way interaction is significant, we need to look at each 2 x 2 separately for each level of Group.  We are going to use `filter()` to create three separate dataframes - one for each Group.
+
+```{r}
+data_arts <- filter(my_data, Group == "Arts_Students")
+data_maths <- filter(my_data, Group == "Maths_Students")
+data_psych <- filter(my_data, Group == "Psychology_Students")
+```
+
+We now run separate ANOVAs - one for each Group.  First the Arts_Students.
+
+```{r}
+model_arts <- aov_4(RT ~ Difficulty * Time_Pressure + (1 + Difficulty * Time_Pressure | Subject), data = data_arts)
+anova(model_arts)
+```
+
+Then the Maths_Students.
+
+```{r}
+model_maths <- aov_4(RT ~ Difficulty * Time_Pressure + (1 + Difficulty * Time_Pressure | Subject), data = data_maths)
+anova(model_maths)
+```
+
+And finally the Psychology_Students.
+
+```{r}
+model_psych <- aov_4(RT ~ Difficulty * Time_Pressure + (1 + Difficulty * Time_Pressure | Subject), data = data_psych)
+anova(model_psych)
+```
+
+The 2-way interaction is significant only for the Psychology_Students.  We need to interpret this using pairwise comparisons from the `emmeans()` package.
+
+```{r}
+emmeans(model_psych, pairwise ~ Difficulty * Time_Pressure, adjust = "Bonferroni")
+```
+
+These reveal that all conditions differ from all other conditions (even with a conservative correction of familywise error.)  For our Psychology Student group, participants respond most quickly to easy questions under no time pressure, slowest to hard questions under time pressure, with response times to easy questions under time Pressure being quicker than response times to hard questions under no time pressure. And that fits nicely with what we see in the visualisation.
+
+```{r}
+ggplot(data_psych, aes(x = Difficulty:Time_Pressure, y = RT, fill = Difficulty:Time_Pressure)) + 
+  geom_violin() + 
+  geom_jitter(width = .1, alpha = .2) + 
+  stat_summary(fun.data = mean_cl_boot) + 
+  guides(fill = FALSE) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  scale_x_discrete(labels = c("Easy\nNo Time Pressure","Easy\nTime Pressure","Hard\nNo Time Pressure", "Hard\nTime Pressure")) + 
+  labs(title = "Reaction Time of Psychology Students to Easy vs. Hard\nMaths Problems Under Time Pressure vs. No Time Pressure",
+       x = "", 
+       y = "RT (ms.)") + 
+  coord_flip() 
+```
+
