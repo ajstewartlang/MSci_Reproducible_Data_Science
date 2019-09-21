@@ -1,5 +1,4 @@
 library(tidyverse)
-library(readr)
 library(Hmisc) # Needed for correlation
 
 dataset1 <- read_csv("data_files/dataset1.csv")
