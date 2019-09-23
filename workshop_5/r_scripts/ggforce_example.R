@@ -87,9 +87,9 @@ prep_star_wars %>%
   ggplot(aes(x = x, id = id, split = y, value = 1))  +
   geom_parallel_sets(aes(fill = homeworld), show.legend = FALSE, alpha = 0.5) +
   geom_parallel_sets_axes(color = "white", fill = "white", size = 25) +
-  geom_parallel_sets_labels(angle = 0, size = 3.5) +
+  geom_parallel_sets_labels(angle = 0, size = 4) +
   theme_no_axes() +
-  labs(title = "Mapping of Homeworlds to Species in the Star Wars universe")
+  labs(title = "Mapping of Homeworlds to Species in the Star Wars Universe")
 
 
 
