@@ -65,13 +65,17 @@ data_recoded %>%
 library(NHANES)
 
 # Boxplot of BMI by Race and AgeDecade 
-NHANES %>% 
+my_plot <- NHANES %>% 
   distinct(ID, .keep_all = TRUE) %>%
   ggplot(aes(x = Race1, y = BMI, colour = Race1)) + 
   geom_boxplot() +
   guides(colour = FALSE) +
   labs(x = "Race", title = "Age = {closest_state}") +
-  transition_states(AgeDecade)
+  transition_states(AgeDecade) +
+  theme(text = element_text(size = 20)) 
+
+animate(my_plot, height = 500, width = 800)
+anim_save("NHANES_plot.gif")
 
 NHANES_tidy <- NHANES %>%
   filter(Race1 != "Other") %>%
@@ -103,8 +107,8 @@ my_plot <- NHANES_tidy %>%
   theme(text = element_text(size = 20)) +
   guides(colour = FALSE, fill = FALSE)
 
-animate(my_plot, height = 400, width = 400)
-anim_save("example_plot.gif")
+animate(my_plot, height = 400, width = 800)
+anim_save("hist_plot.gif")
 
 # From David Robinson
 # https://gist.github.com/dgrtwo/d590078aae86e24418a7cf5a9fb31ae3
