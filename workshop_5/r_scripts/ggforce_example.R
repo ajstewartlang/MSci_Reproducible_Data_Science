@@ -64,3 +64,6 @@ prep_planes %>%
 prep_planes %>%
   group_by(manufacturer, engines) %>%
   summarise(n())
+
+
+
