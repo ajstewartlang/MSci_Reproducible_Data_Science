@@ -65,5 +65,31 @@ prep_planes %>%
   group_by(manufacturer, engines) %>%
   summarise(n())
 
+# Star Wars dataset
+
+star_wars_tally <- starwars %>%
+  filter(!is.na (homeworld) & !is.na(species)) %>% 
+  group_by(species) %>%
+  tally() 
+
+prep_star_wars <- left_join(starwars, star_wars_tally, by = "species") %>%
+  filter(!is.na (homeworld) & !is.na(species)) %>%
+  filter(n > 1) %>%
+  select(homeworld, species) 
+
+prep_star_wars %>%
+  mutate(homeworld = factor(homeworld), species = factor(species)) %>%
+  group_by(species) %>%
+  summarise(n())
+
+prep_star_wars %>%
+  gather_set_data(1:2) %>%
+  ggplot(aes(x = x, id = id, split = y, value = 1))  +
+  geom_parallel_sets(aes(fill = homeworld), show.legend = FALSE, alpha = 0.5) +
+  geom_parallel_sets_axes(color = "white", fill = "white", size = 25) +
+  geom_parallel_sets_labels(angle = 0, size = 3.5) +
+  theme_no_axes() +
+  labs(title = "Mapping of Homeworlds to Species in the Star Wars universe")
+
 
 
