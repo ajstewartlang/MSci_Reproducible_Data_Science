@@ -46,5 +46,7 @@ http://r4ds.had.co.nz
 
 ## Running the Scripts via Binder
 
-You can run the R scripts for this unit in your browser by launching the unit in a Binder. Once loaded, click on the .Rproj file associated with the workshop you want to go through. That will set the directory to point to the data files.<br> [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ajstewartlang/MSci_Reproducible_Data_Science/master?urlpath=rstudio)
+You can run the R scripts for this unit in your browser by launching the unit in a Binder (click on the button below). Once loaded, click on the .Rproj file associated with the workshop you want to go through. That will set the directory to point to the data files.
+<br> 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ajstewartlang/MSci_Reproducible_Data_Science/master?urlpath=rstudio)
 
