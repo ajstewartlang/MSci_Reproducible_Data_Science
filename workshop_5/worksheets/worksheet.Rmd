@@ -17,13 +17,10 @@ Work through any of the following questions in whatever order you want – you p
 1. Maybe you'd like to try some Twitter scraping using the `rtweet()` package - maybe search for mentions of your favourite band. You could then use the `tidytext` package to wrangle the Tweets, plot a wordcloud and run a sentiment analysis on what peolpe are saying about the band. You’ll need to have a look at this morning’s script for the code needed to scrape Twitter, and to get the text in the right format for visualising and plotting a wordcloud. Look for the the `unnest_tokens()` function in the script from this morning - it is used to split a text file into individual words (or tokens) and the `get_sentiments()` function is used to get the sentiment for each of those words. You'll want to use this to split the content Tweets from your Twitter scraping into separate words.  
 
 ##Animated Data Visualisations
-2. Using either a built in dataset (e.g., the `mpg` or `starwars` dataset) or an external one (e.g., the `NHANES` dataset which is accessible in the package called `NHANES`) build some data viz animations to communicate some interesting aspect of the data.
 
-3. Install the BBC style package using:
+2. Using either a built in dataset (e.g., the `mpg` or `starwars` dataset) or an external one (e.g., the `NHANES` dataset which is accessible in the package called `NHANES`) build some data visualisations to communicate some interesting aspect of the data. You might like to play around with the `gganimate` and `ggforce` packages.
 
-`devtools::install_github('bbc/bbplot')`
-
-and apply the `bbc_style()` function to the above animations.
+3. Install the BBC style package using `devtools::install_github('bbc/bbplot')` and apply the `bbc_style()` function to some of the above visualisations.
 
 ##Data Simulation
 
