@@ -30,7 +30,7 @@ library(olsrr) # Needed for stepwise via p
 You now need to read in the data file - if you can't remember the path of where it is save, click on the 'Import Dataset' icon in the top right pane of R Studio.  Make sure your data is assigned to the variable MRes_tut2 (which it should be automatically).
 
 ```{r, echo=FALSE, message=FALSE}
-MRes_tut2 <- read_csv("../R_scripts/data_files/MRes_tut2.csv")
+MRes_tut2 <- read_csv("MRes_tut2.csv")
 ```
 
 Before we start, let's look at the relationships between our IVs (predictors) and our DV (outcome).  We can plot graphs depicting the correlations.  We'll plot test performance against each of our four predictors in turn:
