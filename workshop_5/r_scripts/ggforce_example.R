@@ -3,7 +3,8 @@ library(ggforce)
 library(concaveman)
 library(nycflights13)
 
-# based on this great review here: https://rviews.rstudio.com/2019/09/19/intro-to-ggforce/
+# First part  ####
+# Based on this great review here: https://rviews.rstudio.com/2019/09/19/intro-to-ggforce/
 
 str(airports)
 head(airports)
@@ -65,7 +66,48 @@ prep_planes %>%
   group_by(manufacturer, engines) %>%
   summarise(n())
 
-# Star Wars dataset
+# Another example with wind farm data ####
+
+wind_farms <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2018/2018-11-06/us_wind.csv")
+
+my_filtered_data <- wind_farms %>%
+  filter(ylat > 24 & t_state != "AK") 
+
+my_plot <- my_filtered_data %>%
+  ggplot(aes(xlong, ylat, color = t_state)) + 
+  geom_point(show.legend = FALSE)  
+
+my_plot +
+  labs(title = "Plot of Windfarms in Continental US") +
+  theme_void() 
+
+my_filtered_data <- wind_farms %>%
+  filter(t_state == "CA") 
+
+my_plot <- my_filtered_data %>%
+  ggplot(aes(xlong, ylat, color = t_state)) + 
+  geom_point(show.legend = FALSE, alpha = .5)  
+
+my_plot
+
+my_plot +
+  geom_mark_rect(aes(label = t_county, fill = t_county), show.legend = FALSE) +
+  labs(title = "Plot of Windfarms in California Grouped by County") +
+  theme_void() 
+
+prep_farms <- wind_farms %>%
+  filter(t_state == "CA" & t_manu != "missing") %>%
+  select(t_county, t_manu) 
+
+prep_farms %>%
+  gather_set_data(1:2) %>%
+  ggplot(aes(x = x, id = id, split = y, value = 1))  +
+  geom_parallel_sets(aes(fill = t_manu), show.legend = FALSE, alpha = 0.5) +
+  geom_parallel_sets_axes(axis.width = 0.1, color = "lightgrey", fill = "white") +
+  geom_parallel_sets_labels(angle = 0) +
+  theme_no_axes()
+
+# Star Wars dataset ####
 
 star_wars_tally <- starwars %>%
   filter(!is.na (homeworld) & !is.na(species)) %>% 
@@ -90,6 +132,5 @@ prep_star_wars %>%
   geom_parallel_sets_labels(angle = 0, size = 4) +
   theme_no_axes() +
   labs(title = "Mapping of Homeworlds to Species in the Star Wars Universe")
-
 
 
