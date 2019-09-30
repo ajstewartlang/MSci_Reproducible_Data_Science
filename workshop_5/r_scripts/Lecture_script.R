@@ -3,6 +3,7 @@ library(broom) # Use to tidy results of t-tests into tibbles
 library(gamlss) # Needed to sample from ex-Gaussian distribution
 library(MASS) # Need to sample from multivariate distribution
 library(Hmisc) # For working out Pearson's r
+library(grid) # Needed for rasterGrob
 
 # We can use the rnorm() function to sample x times from a normal distribution where we specify
 # the mean and the sd.  
@@ -498,6 +499,7 @@ likert(my_data,
 
 library(rtweet)
 library(tidytext)
+library(lubridate)
 
 tweets <- search_tweets(q = "suicide", n = 1000, include_rts = FALSE, 
                         retryonratelimit = TRUE)
@@ -553,25 +555,30 @@ wordcloud(words = word_counts_tidy$word,
           colors=brewer.pal(8, "Dark2"))
 
 # More Twitter scraping - Opeth ####
-rt <- search_tweets("Opeth", n = 1000, include_rts = FALSE, retryonratelimit = TRUE)
-rt1 <- separate(data = rt, col = created_at, into = c("date", "time"), sep = " ") 
-rt1 <- rt1[!is.na(rt1$date),]
-rt1$date <- as.factor(rt1$date)
+tweets <- search_tweets("Opeth", n = 200000, include_rts = FALSE, retryonratelimit = TRUE) 
 
-ggplot(rt1, aes (x = date)) + 
-  geom_bar(fill="blue") + 
-  scale_y_continuous(expand = c(0,0), limits = c(0,200)) + 
-  labs(x="Day", y="Number of Tweets") + 
-  ggtitle ("Tweets Mentioning Opeth") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+tweets <- tweets %>% separate(col = created_at, into = c("date", "time"), sep = " ") 
+
+img <- jpeg::readJPEG("opeth2.jpg")
+g <- rasterGrob(img, interpolate=TRUE) 
+
+ggplot(tweets, aes (x = date)) + 
+  annotation_custom(g, xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf) +
+  geom_bar(fill = "white", alpha = .5) + 
+  labs(x = "Date", y = "Number of Tweets") + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = paste("Tweets Mentioning Opeth Scraped On", Sys.Date())) 
 
 # plotting Tweets on map ####
 library(leaflet)
-mymap <- lat_lng(rt)
-m <- leaflet(mymap) %>% addTiles()
-m %>% addCircles(lng = ~lng, lat = ~lat, weight = 8, radius = 40, color = "#fb3004", stroke = TRUE, fillOpacity = 0.8)
+my_map <- lat_lng(tweets)
+to_plot <- leaflet(my_map) %>% 
+  addTiles()
 
-text <- rt
+to_plot %>% addCircles(lng = ~lng, lat = ~lat, weight = 8, radius = 40, 
+                       color = "#fb3004", stroke = TRUE, fillOpacity = 0.8)
+
+text <- tweets
 
 rt1 <- text %>%
   unnest_tokens(word, text)
