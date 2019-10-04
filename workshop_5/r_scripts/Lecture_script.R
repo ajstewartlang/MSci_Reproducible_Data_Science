@@ -618,7 +618,7 @@ tmls %>%
   )
 
 # get tweets from Trump ####
-tmls <- get_timelines(c("@realDonaldTrump"), n = 10000)
+tmls <- get_timelines(user = "@realDonaldTrump")
 
 text <- tmls
 
@@ -632,7 +632,7 @@ word_counts <- rt1 %>%
   count(word, sentiment, sort = TRUE)
 
 word_counts %>% 
-  filter(n > 5 & word != "trump") %>%
+  filter(n > 1 & word != "trump") %>%
   mutate(n = ifelse(sentiment == "negative", -n, n)) %>%
   mutate(word = reorder(word, n)) %>%
   ggplot(aes(word, n, fill = sentiment)) +
