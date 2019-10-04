@@ -618,7 +618,7 @@ tmls %>%
   )
 
 # get tweets from Trump ####
-tmls <- get_timelines(user = "@realDonaldTrump")
+tmls <- get_timelines(user = "@realDonaldTrump", n = 1000)
 
 text <- tmls
 
@@ -639,7 +639,7 @@ word_counts %>%
   geom_col() +
   coord_flip() +
   labs(y = "Contribution to sentiment", 
-       title = "Sentiment Analysis of Tweets by @realDonaldTrump over Christmas")  
+       title = "Sentiment Analysis of Tweets by @realDonaldTrump")  
 
 word_counts_tidy <- word_counts
 set.seed(1234)
