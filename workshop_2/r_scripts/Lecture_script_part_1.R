@@ -1,6 +1,10 @@
 library(tidyverse)
 library(Hmisc) # Needed for correlation
 
+covary <- read_csv("data_files/covary.csv")
+
+rcorr(covary$Study_time, covary$Exam_score)
+
 dataset1 <- read_csv("data_files/dataset1.csv")
 
 # First we will build a scatterplot of points against investment
