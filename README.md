@@ -50,3 +50,7 @@ You can run the R scripts for this unit in your browser by launching the unit in
 <br> <br> 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ajstewartlang/MSci_Reproducible_Data_Science/master?urlpath=rstudio)
 
+## The UoM R User Group
+
+To join the University of Manchester R User Group, subscribe to the mailing list https://listserv.manchester.ac.uk/cgi-bin/wa?A0=RUM or send an email to LISTSERV@listserv.manchester.ac.uk with no subject and the body SUBSCRIBE RUM Your Name.
+
