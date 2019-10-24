@@ -35,7 +35,7 @@ rcorr(my_data$House_price, my_data$Crime)
 rcorr(my_data$House_price, my_data$Average_age)
 rcorr(my_data$House_price, my_data$Household_income)
 
-corr <- cor(my_data)
+corr <- cor(dplyr::select(my_data, -Region, -X1))
 
 ggcorrplot(corr , hc.order = TRUE, type = "lower",
            lab = TRUE)
