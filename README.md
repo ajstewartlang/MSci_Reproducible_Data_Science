@@ -36,6 +36,10 @@ You can also access the workshop content and run everything using RStudio via th
 
 https://bit.ly/3301Zd5
 
+and have put together a brief tutorial on using it here:
+
+https://youtu.be/_wfQxbNXpY4
+
 ## Online R Resources
 
 Below are some helpful R resources - it would be useful to look at the first one before the workshop.
