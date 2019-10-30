@@ -30,6 +30,12 @@ And RStudio from here:
 
 https://www.rstudio.com/products/rstudio/download/#download
 
+## Running from the RStudio Cloud
+
+You can also access the workshop content and run everything using RStudio via the RStudio Cloud.  I have set up our space here:
+
+https://bit.ly/3301Zd5
+
 ## Online R Resources
 
 Below are some helpful R resources - it would be useful to look at the first one before the workshop.
