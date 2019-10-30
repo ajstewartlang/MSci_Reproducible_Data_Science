@@ -39,3 +39,5 @@ vignettes/*.pdf
 /*/slides/*.key
 
 .Rproj.user
+
+*.key
