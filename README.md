@@ -64,3 +64,5 @@ You can run the R scripts for this unit in your browser by launching the unit in
 
 To join the University of Manchester R User Group, subscribe to the mailing list https://listserv.manchester.ac.uk/cgi-bin/wa?A0=RUM or send an email to LISTSERV@listserv.manchester.ac.uk with no subject and the body SUBSCRIBE RUM Your Name.
 
+## Open Research Working Group
+Sign up for our Open Science Working Group email list [here](https://listserv.manchester.ac.uk/cgi-bin/wa?SUBED1=open_research&A=1).
