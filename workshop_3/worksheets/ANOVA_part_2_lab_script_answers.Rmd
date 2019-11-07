@@ -48,9 +48,9 @@ We are first going to visualise the whole dataset (ignoring the Group factor ini
 ggplot(my_data, aes(x = Difficulty:Time_Pressure, y = RT, fill = Difficulty:Time_Pressure)) + 
   geom_boxplot() +
   guides(fill = FALSE) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  theme(text = element_text(size = 15), axis.text.x = element_text(angle = 45, hjust = 1)) + 
   scale_x_discrete(labels = c("Easy\nNo Time Pressure","Easy\nTime Pressure", "Hard\nNo Time Pressure", "Hard\nTime Pressure")) + 
-  labs(title = "Boxplot of Reaction Time to Easy vs. Hard Maths Problems Under\nTime Pressure vs. No Time Pressure",
+  labs(title = "Boxplot of Reaction Time to Easy vs. Hard Maths \nProblems Under Time Pressure vs. No Time Pressure",
        x = "", 
        y = "RT (ms.)") 
 ```
@@ -61,9 +61,9 @@ Now we are going ot plot the condition means with 95% confidence intervals.
 ggplot(my_data, aes(x = Difficulty:Time_Pressure, y = RT, fill = Difficulty:Time_Pressure)) + 
   stat_summary(fun.data = mean_cl_boot) + 
   guides(fill = FALSE) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  theme(text = element_text(size = 15), axis.text.x = element_text(angle = 45, hjust = 1)) + 
   scale_x_discrete(labels = c("Easy\nNo Time Pressure","Easy\nTime Pressure","Hard\nNo Time Pressure", "Hard\nTime Pressure")) + 
-  labs(title = "Boxplot of Reaction Time to Easy vs. Hard Maths Problems Under\nTime Pressure vs. No Time Pressure",
+  labs(title = "Means and bootstrapped CIs of Reaction Time to Easy vs. \nHard Maths Problems Under Time Pressure vs. \nNo Time Pressure",
        x = "", 
        y = "RT (ms.)") 
 ```
@@ -94,14 +94,14 @@ ggplot(my_data, aes(x = Difficulty:Time_Pressure, y = RT, fill = Difficulty:Time
   scale_color_brewer(palette = "Dark2") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
   scale_x_discrete(labels = c("Easy\nNo Time Pressure","Easy\nTime Pressure","Hard\nNo Time Pressure", "Hard\nTime Pressure")) + 
-  labs(title = "Boxplot of Reaction Time to Easy vs. Hard Maths Problems Under\nTime Pressure vs. No Time Pressure",
+  labs(title = "Plot of Reaction Time with Means and CIs to Easy vs. Hard Maths Problems \nUnderTime Pressure vs. No Time Pressure",
        x = "", 
        y = "RT (ms.)")  
 ```
 
 It is interesting to note that for the Easy / No Time Pressure Condition, the mean of the datset is nowhere near any of the actual data points - the 95% CI doesn't include even one actual data point. It's better that we do separate plots for each group. We are going to use the `facet_wrap()` function to generate separate plots for each Group. 
 
-Note that for this first plot I am flipping the x- and y- axes using `coord_flip()`. This can sometimes help with the interpretation of a visualisation (especially if the x-axis factor labels are quite long).
+Note that for this first plot I am flipping the x- and y- axes using `coord_flip()`. This can sometimes help with the interpretation of a visualisation (especially if the x-axis factor labels are quite long). To honest, I don't think it works for this plot - drop the `coord_flip()` line of code, rerun the plot and see if you agree.
 
 ```{r}
 ggplot(my_data, aes(x = Difficulty:Time_Pressure, y = RT, fill = Difficulty:Time_Pressure)) + 
@@ -112,7 +112,7 @@ ggplot(my_data, aes(x = Difficulty:Time_Pressure, y = RT, fill = Difficulty:Time
   guides(fill = FALSE) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
   scale_x_discrete(labels = c("Easy\nNo Time Pressure","Easy\nTime Pressure","Hard\nNo Time Pressure", "Hard\nTime Pressure")) + 
-  labs(title = "Boxplot of Reaction Time to Easy vs. Hard Maths Problems Under\nTime Pressure vs. No Time Pressure",
+  labs(title = "Plot of Reaction Time to Easy vs. Hard Maths Problems Under\nTime Pressure vs. No Time Pressure",
        x = "", 
        y = "RT (ms.)") + 
   coord_flip() 
@@ -191,11 +191,11 @@ ggplot(data_psych, aes(x = Difficulty:Time_Pressure, y = RT, fill = Difficulty:T
   geom_jitter(width = .1, alpha = .2) + 
   stat_summary(fun.data = mean_cl_boot) + 
   guides(fill = FALSE) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  theme(axis.text.x = element_text(size = 10, angle = 45, hjust = 1),
+        axis.title.y = element_text(size = 15)) + 
   scale_x_discrete(labels = c("Easy\nNo Time Pressure","Easy\nTime Pressure","Hard\nNo Time Pressure", "Hard\nTime Pressure")) + 
-  labs(title = "Reaction Time of Psychology Students to Easy vs. Hard\nMaths Problems Under Time Pressure vs. No Time Pressure",
+  labs(title = "Reaction Time of Psychology Students for our Four Experimental Conditions",
        x = "", 
-       y = "RT (ms.)") + 
-  coord_flip() 
+       y = "RT (ms.)") 
 ```
 
