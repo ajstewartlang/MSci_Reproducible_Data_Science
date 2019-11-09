@@ -113,7 +113,7 @@ The line of code below starting with `filter()` means filter cases where Educati
 
 I then add a `geom_boxplot()` layer to create a boxplot for each level of our Education factor - and I'm arranging the order in which they're displayed by using the `fct_reorder()` function to do the re-ordering based on the median BMI for the factor Education. 
 
-The `guides(colour = FALSE)` call supresses displaying the colour legend - delete it and rerun the code to see what changes.
+The `guides(colour = FALSE)` call supresses displaying the colour legend - put the hash symbol `#` in front of that line of code and rerun the code chunk to see what changes.
 
 ```{r, warning=FALSE}
 NHANES_tidied %>% 

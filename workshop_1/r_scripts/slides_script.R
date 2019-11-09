@@ -91,10 +91,10 @@ ggplot(data_long, aes(x = condition, y = rt, group = condition, fill = condition
   geom_violin() + 
   geom_jitter(alpha = .25, position = position_jitter(0.05)) + 
   guides(colour = FALSE, fill = FALSE) +
-  stat_summary(fun.data = "mean_cl_boot", colour = "black", size = 1) 
+  stat_summary(fun.data = mean_cl_boot, colour = "black", size = 1) 
 
 # Beeswarm plot
-ggplot(data_long, aes(x = condition, y = rt, group = condition, fill = condition)) + 
+ggplot(data_long, aes(x = condition, y = rt)) + 
   geom_beeswarm(alpha = .25) + 
   guides(colour = FALSE, fill = FALSE) +
   stat_summary(fun.data = "mean_cl_boot", colour = "black", size = 1) 
@@ -117,9 +117,8 @@ data_long %>%
   mutate(Condition = recode(condition, 
                             "complex_sentence" = "Complex Sentence",
                             "simple_sentence" = "Simple Sentence")) %>%
-  ggplot(aes(x = Condition, y = rt, group = Condition, fill = Condition)) + 
+  ggplot(aes(x = Condition, y = rt)) + 
   geom_beeswarm(alpha = .25) + 
-  guides(colour = FALSE, fill = FALSE) +
   stat_summary(fun.data = "mean_cl_boot", colour = "black", size = 1) +
   labs(title = "Plot of Reaction Time (ms.) by Condition",
        x = "Condition", 
@@ -131,9 +130,8 @@ data_long %>%
   mutate(Condition = recode(condition, 
                             "complex_sentence" = "Complex Sentence",
                             "simple_sentence" = "Simple Sentence")) %>%
-  ggplot(aes(x = Condition, y = rt, group = Condition, fill = Condition)) + 
+  ggplot(aes(x = Condition, y = rt)) + 
   geom_beeswarm(alpha = .25) + 
-  guides(colour = FALSE, fill = FALSE) +
   stat_summary(fun.data = "mean_cl_boot", colour = "black", size = 1) +
   labs(title = "Plot of Reaction Time (ms.) by Condition",
        x = "Condition", 
@@ -144,9 +142,8 @@ my_plot <- data_long %>%
   mutate(Condition = recode(condition, 
                             "complex_sentence" = "Complex Sentence",
                             "simple_sentence" = "Simple Sentence")) %>%
-  ggplot(aes(x = Condition, y = rt, group = Condition, fill = Condition)) + 
+  ggplot(aes(x = Condition, y = rt)) + 
   geom_beeswarm(alpha = .25) + 
-  guides(colour = FALSE, fill = FALSE) +
   stat_summary(fun.data = "mean_cl_boot", colour = "black", size = 1) +
   labs(title = "Plot of Reaction Time (ms.) by Condition",
        x = "Condition", 

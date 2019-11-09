@@ -111,7 +111,7 @@ starwars %>%
   labs(title = "Histogram of Characters' Heights in Star Wars", 
        x = "Height (cm)", 
        y = "Count") +  
-  facet_wrap(~species)
+  facet_wrap(~ species)
 
 # Now let's use the filter() function to filter only when we have Human and 
 # Droid species.  The operator == means 'is equal to', '|' means OR and & means
@@ -129,7 +129,7 @@ starwars %>%
   labs(title = "Histogram of Characters' Heights in Star Wars\nOnly Droids and Humans", 
        x = "Height (cm)", 
        y = "Count") +
-  facet_wrap(~species)
+  facet_wrap(~ species)
 
 # Let's aggregate our filtered dataset working out the means and standard 
 # deviations for each of our two groups (Humans vs. Droids).
