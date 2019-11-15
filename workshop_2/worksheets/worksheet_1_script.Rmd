@@ -59,7 +59,7 @@ This plot looks pretty interesting.  How about calculating Pearson's r?
 rcorr(crime$Population, crime$Violent_Crimes)
 ```
 
-Look at the r and p-values - r is =.81 and p < .001. So ~64% of the variance in our Violent_Crimes variable is explained by our Population size variable.  Clearly there is a positive relationship between population size and the rate of violent crime. From the plot, we might conclude that the relationship is being overly influenced by crime in a small number of very large cities (top right of the plot above).  Let's exclude cities with populations greater than 2,000,000
+Look at the r and p-values - r is =.81 and p < .001. So ~66% of the variance in our Violent_Crimes variable is explained by our Population size variable.  Clearly there is a positive relationship between population size and the rate of violent crime. From the plot, we might conclude that the relationship is being overly influenced by crime in a small number of very large cities (top right of the plot above).  Let's exclude cities with populations greater than 2,000,000
 
 ```{r}
 crime_filtered <- filter(crime, Population < 2000000)
