@@ -27,7 +27,7 @@ emmeans(model, pairwise ~ Word * Image * Age, adjust = "Bonferroni")
 # Three way interaction is significant so run two separate 2-ways
 young_filter <- filter(my_data, Age == "Young")
 
-model_young <- aov_4(RT ~ Word * Image + (1 + Word *Image | Participant), data = young_filter)
+model_young <- aov_4(RT ~ Word * Image + (1 + Word * Image | Participant), data = young_filter)
 anova(model_young)
 
 emmeans(model_young, pairwise ~ Word * Image, adjust = "Bonferroni")
