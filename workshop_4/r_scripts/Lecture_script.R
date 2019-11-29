@@ -259,9 +259,9 @@ df_models <- bind_rows(pooled, no_pooling, partial_pooling) %>%
 p_model_comparison %+% df_models
 
 # Linear mixed model (LMM) for 1-factor (repeated measures) with three levels ####
-DV <- read_csv("DV_1factor.csv", 
-                       col_types = cols(Condition = col_factor(levels = c("Neutral", 
-                                                                          "Positive", "Negative"))))
+DV <- read_csv("data_files/DV_1factor.csv")
+
+DV$Condition <- as.factor(DV$Condition)
 DV$Condition <- relevel(DV$Condition, ref = 3)
 
 ggplot(DV, aes(x = Condition, y = Gaze, colour = Condition)) + 
@@ -306,7 +306,7 @@ model.null <- glmer(DV ~ (1 | Subject) + (1 | Item), data = RO, family = binomia
 anova(model.interceptonly, model.null)
 
 # LMM for 2x2 repeated measures factorial design ####
-DV <- read_csv("DV.csv")
+DV <- read_csv("data_files/DV.csv")
 
 DV$Sentence <- as.factor(DV$Sentence)
 DV$Context <- as.factor(DV$Context)
@@ -351,7 +351,7 @@ summary(model.full)
 emmeans(model.full, pairwise ~ Context * Sentence, adjust="none")
 
 # CLMM for ordinal data ####
-Main <- read_csv("Main.csv")
+Main <- read_csv("data_files/Main.csv")
 
 Main$Subject <- as.factor(Main$Subject)
 Main$Image <- as.factor(Main$Image)
