@@ -32,7 +32,7 @@ set.seed(1234)
 dist <- rnorm(5000000, 0, 1)
 hist(dist, breaks = 1000)
 
-dist <- as.tibble(dist)
+dist <- as_tibble(dist)
 ggplot(dist, aes(x = value)) + geom_histogram(bins = 1000) + 
   geom_vline(xintercept = 1.96, colour = "red") +
   geom_vline(xintercept = -1.96, colour = "red") +
@@ -62,9 +62,10 @@ hist(scale(dist1), breaks = 100)
 set.seed(1234)
 cond1 <- rnorm(1000000, 0, 1)
 cond2 <- rnorm(1000000, 1.96, 1)
-data <- as.tibble(cbind(cond1, cond2))
+my_data <- as.tibble(cbind(cond1, cond2))
 
-ggplot(data) + geom_density(aes(x = cond1, y = ..density.., colour = "red")) +
+ggplot(my_data) + 
+  geom_density(aes(x = cond1, y = ..density.., colour = "red")) +
   geom_density(aes(x = cond2, y = ..density.., colour = "green")) + 
   xlab("Data") + 
   guides(colour = FALSE)
@@ -108,7 +109,7 @@ dv
 # variables together as columns, and then as.tibble() to convert these three combined columns to a tibble.
 # A tibble is really just a supercharged dataframe.
 
-my_data <- as.tibble(cbind(participant, condition, dv))
+my_data <- as_tibble(cbind(participant, condition, dv))
 my_data
 
 # Let's check to make sure our data look as we expect. We need to turn our condition column in the tibble 
