@@ -26,6 +26,8 @@ ggplot(ageheightdata, aes(x = age, y = height)) +
   geom_smooth(method = "lm")
 
 # Start of random slopes and intercepts simulation ####
+# You really don't need to understand the following to follow the slides
+# The code below just creates the simulated data set
 subject <- rep(1:10, each = 10)
 condition <- rep(c("large", "small"), 50)
 item <- rep(rep(1:5), 20)
