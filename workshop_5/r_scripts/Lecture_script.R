@@ -128,7 +128,7 @@ ggplot(my_data, aes(x = condition, y = dv, fill = condition)) +
   geom_jitter(alpha = .2, width = .05) + 
   guides(fill = FALSE)
 
-# Looks petty good!  We can now perform an independent sample t-test to see if the conditons differ
+# Looks petty good!  We can now perform an independent sample t-test to see if the conditions differ
 
 t.test(filter(my_data, condition == "fast")$dv, filter(my_data, condition == "slow")$dv, paired = FALSE)
 
@@ -185,8 +185,8 @@ for (i in 1:total_samples) {
   sample <- i
   set.seed(1233 + i)
   dv <- c(rnorm(sample_size/2, 1000, 50), rnorm(sample_size/2, 1020, 50))
-  data <- as.tibble(cbind(participant, condition, dv, sample))
-  all_data <- rbind(data, all_data)
+  my_data <- as.tibble(cbind(participant, condition, dv, sample))
+  all_data <- rbind(my_data, all_data)
 }
 
 all_data$condition <- as.factor(all_data$condition)
